@@ -1,0 +1,560 @@
+<html>
+
+<head>
+    <title>Cronometro Samurai</title>
+    <link rel="stylesheet" href="dist/bootstrap.css" />
+    <script src="dist/jquery.js"></script>
+    <script src="dist/bootstrap.js"></script>
+
+    <style>
+        .boxPrincipal {
+            display: flex;
+            flex-direction: column;
+            background-color: #008000;
+            overflow: hidden;
+        }
+
+        .div_cron {
+            width: 100vw;
+            height: 50vh;
+            padding-left: 35px;
+        }
+
+        .a_cron {
+            font-size: 120px;
+            letter-spacing: 30px;
+            color: white;
+            font-family: Impact;
+        }
+
+        .estatisticas {
+            font-size: 35px;
+            color: white;
+            font-weight: bold;
+            font-family: arial;
+        }
+
+        h6 {
+            color: white;
+            margin-bottom: -5px;
+            font-family: Arial;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .div_icones {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .div_icones:hover {
+            opacity: 0.7;
+        }
+
+
+        .piscar {
+            -webkit-animation-name: blinker;
+            -webkit-animation-duration: 1s;
+            -webkit-animation-timing-function: linear;
+            -webkit-animation-iteration-count: infinite;
+        }
+
+        @-webkit-keyframes blinker {
+            0% {
+                opacity: 1.0;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 1.0;
+            }
+        }
+    </style>
+
+
+</head>
+
+<body class='boxPrincipal container' id='body'>
+
+    <div class='row text-center'>
+        <div class='col div_cron'>
+            <a class='a_cron numeros' id='tempo'>
+                00:00
+            </a>
+        </div>
+    </div>
+    <div class='row p-2'>
+        <div class='col estatisticas'>
+            <h6 class='texto'>DECORRIDO</h6>
+            <a class='numeros' id='decorrido'>00:00</a>
+        </div>
+        <div class='col estatisticas text-center'>
+            <h6 class='texto'>INTERVALO</h6>
+            <div class='numeros' id='intervalo'>0/0</div>
+        </div>
+        <div class='col estatisticas text-right'>
+            <h6 class='texto'>RESTANTE</h6>
+            <a class='numeros' id='restante'>00:00</a>
+        </div>
+    </div>
+    <div class='row p-2' style='height: 25vh; '>
+        <div class='col-2 border div_icones' id='div_abrirModalConfig'>
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height='32' width='32' class="texto"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
+            </svg>
+
+
+        </div>
+        <div class='col'>
+            <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active" id='carouselExercicio'>
+                        <div class='text-center border texto' id='div_hiddenPreparese'
+                            style='display: flex; justify-content: center; align-items: center;font-size: 35px; color:white; font-family: arial; background-color:yellow;'>
+                            <div class='texto2_1'>Prepare-se</div>
+                        </div>
+                    </div>
+                    <div class="carousel-item" id='carouselExercicio'>
+                        <div class='text-center border texto'
+                            style='display: flex; justify-content: center; align-items: center;font-size: 35px; color:white; font-family: arial; background-color:yellowgreen;'>
+                            <div class='texto2_1'>Exercício</div>
+                        </div>
+                    </div>
+                    <div class="carousel-item" id='carouselDescanso'>
+                        <div class='text-center border texto'
+                            style='display: flex; justify-content: center; align-items: center;font-size: 35px; color:white; font-family: arial; background-color: red;'>
+                            <div class='texto2_2'>Descanso</div>
+                        </div>
+                    </div>
+                    <div class="carousel-item" id='carouselDescanso'>
+                        <div class='text-center border texto'
+                            style='display: flex; justify-content: center; align-items: center;font-size: 35px; color:white; font-family: arial; background-color: yellow;'>
+                            <div class='texto2_3'>Fim</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='col-2 border div_icones'>
+            <div id='div_hiddenPause' onclick='reiniciar()'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="texto"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z" />
+                    <path fill-rule="evenodd"
+                        d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z" />
+                </svg>
+            </div>
+
+            <div id='div_hiddenPlay' onclick='iniciar()'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="texto"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z" />
+                </svg>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+    <!-------------------------------------------------------------->
+    <!-------------------------- MODAL ----------------------------->
+    <!-------------------------------------------------------------->
+
+
+    <div class="modal fade" id="modal_config" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Configurações</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class='row'>
+                        <div class='col'>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Exercício</label>
+                                <input type="number" id='input_tempoPorRepeticao' class="form-control form-control-sm"
+                                    placeholder="Tempo em segundos" min='2' value='2'>
+                            </div>
+                        </div>
+                        <div class='col'>
+                            <div class="form-group">
+                                <label for="input_repeticoes">Repetições</label>
+                                <input type="number" id='input_repeticoes' class="form-control form-control-sm"
+                                    placeholder="Repetições" min='1' value='1'>
+                            </div>
+                        </div>
+                        <div class='col'>
+
+                            <div class="form-group">
+                                <label for="input_tempoDescanso">Descanso</label>
+                                <input type="number" id='input_tempoDescanso' class="form-control form-control-sm"
+                                    placeholder="Repetições" min='2' value='2'>
+                            </div>
+
+                        </div>
+                        <div class='col'>
+                            <div class="form-group">
+                                <label for="input_tempoDescanso">Preparo</label>
+                                <input type="number" id='input_tempoPreparo' class="form-control form-control-sm"
+                                    placeholder="Preparo" min='1' value='1'>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class='row'>
+                        <div class='col'>
+                            <span>Cor de fundo</span>
+                            <select class="custom-select" id="select_corDeFundo">
+                                <option hidden>Selecione...</option>
+                                <option style='color:#000000' value="#000000">Preto ■</option>
+                                <option style='color:#f29100' value="#f29100">Laranja escuro ■</option>
+                                <option style='color:#f8b133' value="#f8b133">Laranja claro ■</option>
+                                <option value="#FFFFFF">Branco ■</option>
+                                <option style='color:#008000' value="#008000">Verde ■</option>
+                                <option style='color:#0827F5' value="#0827F5">Azul ■</option>
+                            </select>
+                        </div>
+                        <div class='col'>
+                            <span>Cor de Texto</span>
+                            <select class="custom-select" id="select_corDeTexto">
+                                <option hidden>Selecione...</option>
+                                <option style='color:#000000' value="#000000">Preto ■</option>
+                                <option style='color:#f29100' value="#f29100">Laranja escuro ■</option>
+                                <option style='color:#f8b133' value="#f8b133">Laranja claro ■</option>
+                                <option value="#FFFFFF">Branco ■</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class='row'>
+                        <div class='col'>
+                            <span>Cor de número</span>
+                            <select class="custom-select" id="select_corDeNumero">
+                                <option hidden>Selecione...</option>
+                                <option style='color:#000000' value="#000000">Preto ■</option>
+                                <option style='color:#f29100' value="#f29100">Laranja escuro ■</option>
+                                <option style='color:#f8b133' value="#f8b133">Laranja claro ■</option>
+                                <option value="#FFFFFF">Branco ■</option>
+                            </select>
+                        </div>
+                        <div class='col'>
+                            <span>Cor Exercício</span>
+                            <select class="custom-select" id="select_corDeTexto2_1">
+                                <option hidden>Selecione...</option>
+                                <option style='color:#000000' value="#000000">Preto ■</option>
+                                <option style='color:#f29100' value="#f29100">Laranja escuro ■</option>
+                                <option style='color:#f8b133' value="#f8b133">Laranja claro ■</option>
+                                <option value="#FFFFFF">Branco ■</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class='row'>
+                        <div class='col'>
+                            <span>Cor Descanso</span>
+                            <select class="custom-select" id="select_corDeTexto2_2">
+                                <option hidden>Selecione...</option>
+                                <option style='color:#000000' value="#000000">Preto ■</option>
+                                <option style='color:#f29100' value="#f29100">Laranja escuro ■</option>
+                                <option style='color:#f8b133' value="#f8b133">Laranja claro ■</option>
+                                <option value="#FFFFFF">Branco ■</option>
+                            </select>
+                        </div>
+                        <div class='col'>
+                            <span>Cor Fim</span>
+                            <select class="custom-select" id="select_corDeTexto2_3">
+                                <option hidden>Selecione...</option>
+                                <option style='color:#000000' value="#000000">Preto ■</option>
+                                <option style='color:#f29100' value="#f29100">Laranja escuro ■</option>
+                                <option style='color:#f8b133' value="#f8b133">Laranja claro ■</option>
+                                <option style='color:#FF0000' value="#FF0000">Vermelho ■</option>
+                                <option value="#FFFFFF">Branco ■</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Sair</button>
+                    <button type="button" id='btn_salvarConfiguracoes' class="btn btn-sm btn-primary">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // ---------- MOSTRAR PLAY/PAUSE -----------//
+        $('#div_hiddenPlay').show();
+        $('#div_hiddenPause').hide();
+        $('#div_hiddenPreparese').hide();
+
+        $('.carousel').carousel({
+            interval: 0
+        })
+
+        var global_configs = {};
+
+        // -----------------------------------------------------------//
+        // ------------------ VARIÁVEIS DE CONTROLE ------------------//
+        let tempoPorRepeticao = 0;
+        let repeticoes = 0;
+        let tempoDescanso = 0;
+        let tempoPreparo = 0;
+        let tempoTotal = 0;
+        let tempoRestante = 0;
+        let tempoDecorrido = 0;
+        let countRepeticoes = 0;
+
+
+
+        if (typeof sessionStorage.cfgCronometro !== 'undefined') {
+            global_configs = JSON.parse(sessionStorage.cfgCronometro);
+            $('#body').css('background-color', global_configs.cores.fundoInicial);
+            $('.texto').css('color', global_configs.cores.textoInicial);
+            $('.texto2_1').css('color', global_configs.cores.texto2_1Inicial);
+            $('.texto2_2').css('color', global_configs.cores.texto2_2Inicial);
+            $('.texto2_3').css('color', global_configs.cores.texto2_3Inicial);
+            $('.numeros').css('color', global_configs.cores.numeroInicial);
+
+            $('#select_corDeFundo').val(global_configs.cores.fundoInicial);
+            $('#select_corDeTexto').val(global_configs.cores.textoInicial);
+            $('#select_corDeTexto2_1').val(global_configs.cores.texto2_1Inicial)
+            $('#select_corDeTexto2_2').val(global_configs.cores.texto2_2Inicial)
+            $('#select_corDeTexto2_3').val(global_configs.cores.texto2_3Inicial)
+            $('#select_corDeNumero').val(global_configs.cores.numeroInicial)
+
+            $('#input_tempoPorRepeticao').val(global_configs.tempos.tempoPorRepeticaoInicial)
+            $('#input_repeticoes').val(global_configs.tempos.repeticoesInicial)
+            $('#input_tempoDescanso').val(global_configs.tempos.tempoDescansoInicial)
+            $('#input_tempoPreparo').val(global_configs.tempos.tempoPreparoInicial)
+
+            tempoPorRepeticao = parseInt(global_configs.tempos.tempoPorRepeticaoInicial);
+            repeticoes = parseInt(global_configs.tempos.repeticoesInicial);
+            tempoDescanso = parseInt(global_configs.tempos.tempoDescansoInicial);
+            tempoPreparo = parseInt(global_configs.tempos.tempoPreparoInicial);
+            tempoTotal = (tempoPorRepeticao + tempoDescanso) * repeticoes
+            tempoRestante = tempoTotal;
+            tempoDecorrido = 0
+            countRepeticoes = 0;
+        }
+
+        $('#div_abrirModalConfig').click(function () {
+            $('#modal_config').modal('show');
+        });
+
+
+        $('#select_corDeFundo').change(function () {
+            const corSelecionada = $('#select_corDeFundo :selected').val();
+            $('#body').css('background-color', corSelecionada);
+        });
+        $('#select_corDeTexto').change(function () {
+            const corSelecionada = $('#select_corDeTexto :selected').val();
+            $('.texto').css('color', corSelecionada);
+        });
+        $('#select_corDeTexto2_1').change(function () {
+            const corSelecionada = $('#select_corDeTexto2_1 :selected').val();
+            $('.texto2_1').css('color', corSelecionada);
+        });
+        $('#select_corDeTexto2_2').change(function () {
+            const corSelecionada = $('#select_corDeTexto2_2 :selected').val();
+            $('.texto2_2').css('color', corSelecionada);
+        });
+        $('#select_corDeTexto2_3').change(function () {
+            const corSelecionada = $('#select_corDeTexto2_3 :selected').val();
+            $('.texto2_3').css('color', corSelecionada);
+        });
+        $('#select_corDeNumero').change(function () {
+            const corSelecionada = $('#select_corDeNumero :selected').val();
+            $('.numeros').css('color', corSelecionada);
+        });
+
+
+        var taskInterval = null;
+        var taskTempoPreparo = null;
+        var taskTempoDescanso = null;
+        var pause_taskInterval = false;
+
+
+        // --------------------------------------------------------- //
+        // ------------ SALVA CONFIGURAÇÕES NAS VARIÁVEIS ---------- //
+        // --------------------------------------------------------- //
+        $('#btn_salvarConfiguracoes').click(function () {
+            sessionStorage.cfgCronometro = JSON.stringify(
+                {
+                    cores: {
+                        fundoInicial: $('#select_corDeFundo').val(),
+                        textoInicial: $('#select_corDeTexto').val(),
+                        texto2_1Inicial: $('#select_corDeTexto2_1').val(),
+                        texto2_2Inicial: $('#select_corDeTexto2_2').val(),
+                        texto2_3Inicial: $('#select_corDeTexto2_3').val(),
+                        numeroInicial: $('#select_corDeNumero').val(),
+                    },
+                    tempos: {
+                        tempoPorRepeticaoInicial: $('#input_tempoPorRepeticao').val(),
+                        repeticoesInicial: $('#input_repeticoes').val(),
+                        tempoDescansoInicial: $('#input_tempoDescanso').val(),
+                        tempoPreparoInicial: $('#input_tempoPreparo').val()
+                    }
+                }
+            );
+            window.location.href = '';
+            $('#modal_config').modal('hide')
+        });
+
+
+        // ---------------------------------------------------------- //
+        // ------------------------- ÁUDIOS ------------------------- //
+        // ---------------------------------------------------------- //
+        const exercicio_mp3 = new Audio('dist/mp3/alarmeExercicio.mp3');
+        const descanso_mp3 = new Audio('dist/mp3/alarmeDescanso.mp3');
+        const fim_mp3 = new Audio('dist/mp3/alarmeFim.mp3');
+
+
+
+        // -------------------------- FUNÇÕES ----------------------- //
+        // -------------------------- FUNÇÕES ----------------------- //
+        function iniciar() {
+            if (typeof sessionStorage.cfgCronometro == 'undefined') {
+                alert('Você não configurou os tempos.')
+            } else {
+                $('#tempo').html(transformarSegundosEmHoras(tempoPorRepeticao));
+                pause_taskInterval = false;
+                $('#div_hiddenPause').show();
+                $('#div_hiddenPlay').hide();
+                $('#div_hiddenPreparese').show();
+
+                preparese(function () {
+                    $('#tempo').html(transformarSegundosEmHoras(tempoPreparo));
+                    exercicio();
+                });
+            }
+        }
+
+        function exercicio() {
+            //clearInterval(taskInterval);
+            console.log(tempoDecorrido,tempoTotal)
+            if (tempoDecorrido === tempoTotal) {
+                console.log(tempoDecorrido, tempoTotal)
+                fim();
+                return;
+            }
+            exercicio_mp3.play();
+            $('#tempo').html(transformarSegundosEmHoras(tempoPorRepeticao)).css('color', $('#select_corDeNumero').val());
+            $('.carousel').carousel(1)// carousel item "Exercicio"
+            countRepeticoes++;
+            $('#intervalo').html(`${countRepeticoes}/${repeticoes}`)
+            taskInterval = setInterval(() => {
+
+                if (tempoPorRepeticao !== 0) {
+                    tempoPorRepeticao--;
+                    $('#tempo').html(transformarSegundosEmHoras(tempoPorRepeticao));
+                    decorrido();
+                    restante();
+                } else {
+                    tempoPorRepeticao = parseInt($('#input_tempoPorRepeticao').val());
+                    descanso();
+                    clearInterval(taskInterval);
+                }
+
+            }, 1000);
+
+        }
+
+        function descanso() {
+
+            clearInterval(taskTempoDescanso);
+            descanso_mp3.play();
+            $('.carousel').carousel(2); // carousel item "Descanso"
+            $('#tempo').html(transformarSegundosEmHoras(tempoDescanso)).css('color', '#FF0000');
+            taskTempoDescanso = setInterval(() => {
+                if (tempoDescanso !== 0) {
+                    tempoDescanso--;
+                    $('#tempo').html(transformarSegundosEmHoras(tempoDescanso));
+                    decorrido();
+                    restante();
+                } else {
+                    tempoDescanso = parseInt($('#input_tempoDescanso').val());
+                    clearInterval(taskTempoDescanso);
+                    exercicio()
+                }
+            }, 1000);
+
+        }
+
+        function reiniciar() {
+            $('#div_hiddenPause').hide();
+            $('#div_hiddenPlay').show();
+            pause_taskInterval = true;
+            clearInterval(taskInterval);
+
+            window.location.href = '';
+        }
+
+        function fim() {
+            clearInterval(taskInterval);
+            $('.carousel').carousel(3)// carousel item "Fim"
+            $('#tempo').addClass('piscar');
+            fim_mp3.play()
+        }
+
+        function preparese(callback) {
+            $('#tempo').html(transformarSegundosEmHoras(tempoPreparo));
+            taskTempoPreparo = setInterval(() => {
+                if (tempoPreparo !== 0) {
+                    tempoPreparo--;
+                    $('#tempo').html(transformarSegundosEmHoras(tempoPreparo));
+                } else {
+                    clearInterval(taskTempoPreparo);
+                    callback();
+                }
+            }, 1000);
+        }
+
+        function decorrido() {
+            tempoDecorrido++;
+            $('#decorrido').html(transformarSegundosEmHoras(tempoDecorrido));
+        }
+        function restante() {
+            tempoRestante--;
+            $('#restante').html(transformarSegundosEmHoras(tempoRestante));
+        }
+
+        // ------------------------------------------------------------------------------- //
+        // ------------------------ Transformar segundos em H:I:S ------------------------ //
+        // ------------------------------------------------------------------------------- //
+        function transformarSegundosEmHoras(segundos) {
+            function duas_casas(numero) {
+                if (numero <= 9) {
+                    numero = "0" + numero;
+                }
+                return numero;
+            }
+            var hora = duas_casas(Math.round(segundos / 3600));
+            var minuto = duas_casas(Math.floor((segundos % 3600) / 60));
+            var sec = duas_casas(Math.floor((segundos % 60)));
+            var formatado = minuto + ":" + sec;
+            return formatado;
+        }
+    </script>
+
+</body>
+
+</html>
